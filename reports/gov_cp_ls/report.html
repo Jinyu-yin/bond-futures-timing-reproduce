@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>国债活跃券与短融多空利差简报</title>
+<style>
+  body { font-family: "Microsoft YaHei", SimSun, serif; margin: 0; background: #f5f5f5; }
+  .WordSection1 {
+    max-width: 720px; margin: 24px auto; padding: 48px 56px; background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 20pt; margin: 0 0 18px 0; color: #0F4761; }
+  h2 { font-size: 14pt; margin: 22px 0 10px 0; color: #0F4761; border-bottom: 1px solid #c8d6e5; padding-bottom: 4px; }
+  p { font-size: 11pt; line-height: 1.75; text-align: justify; margin: 8px 0; }
+  table.stats { border-collapse: collapse; width: 100%; font-size: 10.5pt; margin: 12px 0; }
+  table.stats td, table.stats th { border: 1px solid #9fb3c8; padding: 8px 10px; }
+  table.stats th { background: #eaf1f8; text-align: left; }
+  .fig { margin: 16px 0; text-align: center; }
+  .fig img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+  .muted { color: #555; font-size: 10pt; }
+  code { background: #f0f4f8; padding: 0 4px; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+  <h1>国债活跃券与短融：多空利差简报</h1>
+  <p class="muted">生成时间：2026-05-06 16:37　｜　数据文件：<code>reproduce/public_factors.csv</code></p>
+
+  <h2>摘要</h2>
+  <p>本报告给出中证口径下「中长期国债（活跃券）」与「中证短融」相关分析，并输出两条<strong>最终策略</strong>净值：
+  <b>LongOnly</b>（仅持有 931018）与 <b>LongShort</b>（按信号在国债/短融间二选一切换，含滑点）。长端<strong>不使用中债指数</strong>；
+  国债为<strong>5–10 年期国债活跃券（931018）</strong>；短融为<strong>中证短融（H11014）</strong>。</p>
+
+  <h2>一、构建口径与数据来源</h2>
+  <p><b>（1）做多参考（国债）</b>：中证指数公司发布的「中证5–10年期国债活跃券指数」，代码 <code>931018</code>，
+  取日频<strong>收盘</strong>点位，经 akshare <code>stock_zh_index_hist_csindex</code> 拉取后对期货交易日历前向填充对齐。</p>
+  <p><b>（2）做空/对冲参考（短融）</b>：中证短融指数 <code>H11014</code> 收盘点位；指数本身为多头口径，在多空分析中常作为短端或对冲标的。</p>
+  <p><b>（3）1:1 多空利差（简化对冲）</b>：日收益 rLS = rL − rS，再累乘 (1+rLS)，等价于<strong>等额名义</strong>下「多国债指数、空短融指数」、
+  <strong>日末再平衡</strong>、无保证金与费用的理想化口径；属于最常见的「多空对冲」示意之一，但不是最小方差或 β 中性等更复杂策略。</p>
+  <p><b>（4）滚动 β 多空对冲（示意）</b>：在 60 个交易日窗口内估计 Cov(rL,rS)/Var(rS)，用<strong>前一日</strong> β 构造
+  rH = rL − β·rS，再累乘得到第二条对冲净值（因子表列 <code>5_hedge_rollbeta60_ls_nav</code>）。用于部分对冲短融方向暴露，仍不含交易成本。</p>
+
+  <h2>二、样本区间与收益风险指标</h2>
+  <p>样本起止：<strong>2017-01-20</strong> 至
+  <strong>2026-04-24</strong>。</p>
+  <table class="stats">
+    <tr><th>指标</th><th>数值</th></tr>
+    <tr><td>样本跨度（近似年）</td><td style='text-align:right'>9.257</td></tr><tr><td>国债多头（931018）近似年化</td><td style='text-align:right'>3.807%</td></tr><tr><td>短融（H11014）近似年化</td><td style='text-align:right'>2.981%</td></tr><tr><td>1:1 多空利差净值近似年化</td><td style='text-align:right'>0.802%</td></tr><tr><td>1:1 利差日收益年化波动</td><td style='text-align:right'>4.398%</td></tr><tr><td>国债归一净值最大回撤</td><td style='text-align:right'>-4.26%</td></tr><tr><td>短融归一净值最大回撤</td><td style='text-align:right'>-0.16%</td></tr><tr><td>1:1 利差净值最大回撤</td><td style='text-align:right'>-5.34%</td></tr><tr><td>国债与短融日收益相关系数</td><td style='text-align:right'>0.3306</td></tr><tr><td>滚动β对冲（60日）净值近似年化</td><td style='text-align:right'>0.358%</td></tr><tr><td>β对冲日收益年化波动</td><td style='text-align:right'>4.465%</td></tr><tr><td>β对冲净值最大回撤</td><td style='text-align:right'>-6.74%</td></tr>
+  </table>
+
+  <h2>三、最终策略：LongOnly 与 LongShort（v1）</h2>
+  <p>策略净值序列已写入因子表列 <code>5_strat_longonly_nav</code>（纯多）与 <code>5_strat_switch_gov_cp_nav</code>（切换策略，含滑点）。同目录另存 <code>strategies_nav.csv</code> 便于复核。</p>
+  <p class="muted">择时胜率（日频、不含票息拆分）：持国债日计国债日收益&gt;0 占比；持短融日计短融日收益&gt;0 占比。LongOnly 仅填多头胜率列。</p>
+  <table class="stats">
+    <tr><th>策略</th><th>口径</th><th>近似年化</th><th>年化波动</th><th>最大回撤</th><th>多头胜率</th><th>空头胜率</th></tr>
+    <tr><td>LongOnly</td><td>买入并持有中证 931018，归一到 1</td><td style="text-align:right">3.867%</td><td style="text-align:right">4.577%</td><td style="text-align:right">-4.37%</td><td style="text-align:right">57.40%</td><td style="text-align:right">—</td></tr>
+    <tr><td>LongShort</td><td>多国债/多短融二选一切换，含滑点 0.01%/次</td><td style="text-align:right">5.261%</td><td style="text-align:right">3.236%</td><td style="text-align:right">-0.62%</td><td style="text-align:right">65.63%</td><td style="text-align:right">79.72%</td></tr>
+  </table>
+  <div class="fig"><img src="fig_strategies_longonly_longshort.png" alt="Strategies comparison" /></div>
+  <p class='muted'>LongShort（切换）样本期换仓次数≈932（按日频权重变化计 1 次）。</p>
+
+  <h2>四、附图：指数与利差全景</h2>
+  <div class="fig"><img src="fig_cumnav.png" alt="累计净值" /></div>
+
+  <h2>五、版式参考说明</h2>
+  <p>版式与插图层次参考项目根目录下由 Word 导出的 111.htm（配套资源见 111.files/）。</p>
+  <p>本页为独立 UTF-8 HTML；若需在 Word 中进一步排版，可将本报告另存或嵌入。</p>
+
+  <h2>六、风险提示</h2>
+  <p>指数编制方法、样本券更替与再投资假设与真实可交易组合存在差异；与国债期货（如 T）的久期、杠杆与交割机制亦不一致。
+  本报告仅供研究整理，不构成投资建议。</p>
+</div>
+</body>
+</html>

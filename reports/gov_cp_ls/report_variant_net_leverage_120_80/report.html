@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>变体：净价 + 杠杆 120%/80%（四策略分面板）</title>
+<style>
+  body { font-family: "Microsoft YaHei", SimSun, serif; margin: 0; background: #f5f5f5; }
+  .WordSection1 {
+    max-width: 900px; margin: 24px auto; padding: 48px 56px; background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 20pt; margin: 0 0 18px 0; color: #0F4761; }
+  h2 { font-size: 14pt; margin: 22px 0 10px 0; color: #0F4761; border-bottom: 1px solid #c8d6e5; padding-bottom: 4px; }
+  p { font-size: 11pt; line-height: 1.75; text-align: justify; margin: 8px 0; }
+  table.stats { border-collapse: collapse; width: 100%; font-size: 10.5pt; margin: 12px 0; }
+  table.stats td, table.stats th { border: 1px solid #9fb3c8; padding: 8px 10px; }
+  table.stats th { background: #eaf1f8; text-align: left; }
+  .fig { margin: 16px 0; text-align: center; }
+  .fig img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+  .muted { color: #555; font-size: 10pt; }
+  code { background: #f0f4f8; padding: 0 4px; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+  <h1>变体：净价 + 杠杆 120%/80%（四策略分面板）</h1>
+  <p class="muted">生成时间：2026-05-06 19:43　｜　文件夹：<code>reproduce/reports/gov_cp_ls/report_variant_net_leverage_120_80</code></p>
+  <h2>设定</h2><p>标的日收益：<b>中债净价</b> 7–10年（国债）、<b>中债净价</b> 1年以下（短端代理，非 CSI 短融）。</p><p>名义杠杆：持有国债日收益 ×1.2，持有短融日收益 ×0.8；滑点口径不变。</p><p>择时胜率按<strong>净价日收益</strong>统计（不含杠杆倍数）。</p>
+  <p>V2 LongShort 换仓次数（日频估计）：<strong>242</strong>。</p>
+
+  <h2>指标与择时胜率（周频交集 / 日频胜率）</h2>
+  <table class="stats">
+    <tr><th>版本 · 策略</th><th>近似年化</th><th>年化波动</th><th>最大回撤</th><th>多头胜率</th><th>空头胜率</th></tr>
+    <tr><td>V1 LongOnly</td><td style='text-align:right'>2.812%</td><td style='text-align:right'>5.716%</td><td style='text-align:right'>-6.63%</td><td style='text-align:right'>45.83%</td><td style='text-align:right'>—</td></tr><tr><td>V1 LongShort</td><td style='text-align:right'>0.936%</td><td style='text-align:right'>3.895%</td><td style='text-align:right'>-5.05%</td><td style='text-align:right'>47.14%</td><td style='text-align:right'>23.96%</td></tr><tr><td>V2 LongOnly</td><td style='text-align:right'>2.812%</td><td style='text-align:right'>5.716%</td><td style='text-align:right'>-6.63%</td><td style='text-align:right'>45.83%</td><td style='text-align:right'>—</td></tr><tr><td>V2 LongShort</td><td style='text-align:right'>2.127%</td><td style='text-align:right'>3.834%</td><td style='text-align:right'>-2.84%</td><td style='text-align:right'>48.44%</td><td style='text-align:right'>21.54%</td></tr>
+  </table>
+
+  <h2>2×2 净值图（每子图一条线）</h2>
+  <div class="fig"><img src="fig_four_panel_2x2.png" alt="four panel" /></div>
+
+  <h2>风险提示</h2>
+  <p>简化回测口径，仅供研究对照。</p>
+</div>
+</body>
+</html>

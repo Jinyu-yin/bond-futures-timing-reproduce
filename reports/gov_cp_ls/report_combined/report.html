@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>国债/短融：v1 vs v2 四策略对比</title>
+<style>
+  body { font-family: "Microsoft YaHei", SimSun, serif; margin: 0; background: #f5f5f5; }
+  .WordSection1 {
+    max-width: 800px; margin: 24px auto; padding: 48px 56px; background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 20pt; margin: 0 0 18px 0; color: #0F4761; }
+  h2 { font-size: 14pt; margin: 22px 0 10px 0; color: #0F4761; border-bottom: 1px solid #c8d6e5; padding-bottom: 4px; }
+  p { font-size: 11pt; line-height: 1.75; text-align: justify; margin: 8px 0; }
+  table.stats { border-collapse: collapse; width: 100%; font-size: 10.5pt; margin: 12px 0; }
+  table.stats td, table.stats th { border: 1px solid #9fb3c8; padding: 8px 10px; }
+  table.stats th { background: #eaf1f8; text-align: left; }
+  .fig { margin: 16px 0; text-align: center; }
+  .fig img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+  .muted { color: #555; font-size: 10pt; }
+  code { background: #f0f4f8; padding: 0 4px; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+  <h1>国债活跃券 vs 短融：v1 / v2 × LongOnly / LongShort 合并对比</h1>
+  <p class="muted">生成时间：2026-05-06 16:38　｜　公开因子：<code>reproduce/public_factors.csv</code>　｜　v2 信号：<code>input_data.xlsx</code></p>
+
+  <h2>一、说明</h2>
+  <p>净值曲线在周频采样<strong>交集区间</strong>内对齐（起点重新归一为 1 便于比较形状）。收益风险指标均在同一交集上计算。</p>
+  <p><b>择时胜率（日频）</b>：不考虑票息拆分；持国债日统计国债日收益&gt;0 占比（多头胜率）；持短融日统计短融日收益&gt;0 占比（空头胜率列）。LongOnly 策略空头胜率记为「—」。</p>
+  <p>V2 LongShort 换仓次数（日频估计）：<strong>242</strong>。</p>
+
+  <h2>二、四策略指标与胜率</h2>
+  <table class="stats">
+    <tr><th>版本 · 策略</th><th>近似年化</th><th>年化波动</th><th>最大回撤</th><th>多头胜率</th><th>空头胜率</th></tr>
+    <tr><td>V1 LongOnly</td><td style='text-align:right'>4.382%</td><td style='text-align:right'>5.068%</td><td style='text-align:right'>-4.37%</td><td style='text-align:right'>57.40%</td><td style='text-align:right'>—</td></tr><tr><td>V1 LongShort</td><td style='text-align:right'>5.254%</td><td style='text-align:right'>3.332%</td><td style='text-align:right'>-0.62%</td><td style='text-align:right'>65.63%</td><td style='text-align:right'>79.72%</td></tr><tr><td>V2 LongOnly</td><td style='text-align:right'>4.440%</td><td style='text-align:right'>4.766%</td><td style='text-align:right'>-4.26%</td><td style='text-align:right'>57.40%</td><td style='text-align:right'>—</td></tr><tr><td>V2 LongShort</td><td style='text-align:right'>3.429%</td><td style='text-align:right'>3.249%</td><td style='text-align:right'>-1.30%</td><td style='text-align:right'>60.74%</td><td style='text-align:right'>80.73%</td></tr>
+  </table>
+
+  <h2>三、净值对比图</h2>
+  <div class="fig"><img src="fig_four_way.png" alt="four-way nav" /></div>
+
+  <h2>四、风险提示</h2>
+  <p>简化口径与指数回测，不等于实盘；合并对比仅供方法对照。</p>
+</div>
+</body>
+</html>

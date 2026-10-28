@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>国债活跃券与短融 LongShort 简报（v2）</title>
+<style>
+  body { font-family: "Microsoft YaHei", SimSun, serif; margin: 0; background: #f5f5f5; }
+  .WordSection1 {
+    max-width: 720px; margin: 24px auto; padding: 48px 56px; background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 20pt; margin: 0 0 18px 0; color: #0F4761; }
+  h2 { font-size: 14pt; margin: 22px 0 10px 0; color: #0F4761; border-bottom: 1px solid #c8d6e5; padding-bottom: 4px; }
+  p { font-size: 11pt; line-height: 1.75; text-align: justify; margin: 8px 0; }
+  table.stats { border-collapse: collapse; width: 100%; font-size: 10.5pt; margin: 12px 0; }
+  table.stats td, table.stats th { border: 1px solid #9fb3c8; padding: 8px 10px; }
+  table.stats th { background: #eaf1f8; text-align: left; }
+  .fig { margin: 16px 0; text-align: center; }
+  .fig img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+  .muted { color: #555; font-size: 10pt; }
+  code { background: #f0f4f8; padding: 0 4px; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+  <h1>国债活跃券与短融：LongShort 简报（v2）</h1>
+  <p class="muted">生成时间：2026-05-24 16:47　｜　信号输入：<code>input_data.xlsx</code>　｜　标的价格：<code>reproduce/public_factors.csv</code></p>
+
+  <h2>一、方法说明（v2）</h2>
+  <p>本版沿用原有 V2 的基本框架：因子筛选只看训练期累计收益率（Train_Total_Return），先保留收益为正且更高的因子，再按相关性阈值去冗余；合成信号包含静态等权（Static）与动态加权（Dynamic）。</p>
+  <p>相较更早版本，本版主要在信号生成与仓位映射上做了稳健化：因子统一做滚动标准化、按持有期平滑，再做波动率缩放与限幅，随后映射为国债/短融的离散切换仓位，以降低单日极端信号对结果的影响。</p>
+
+  <h2>二、样本区间与指标</h2>
+  <table class="stats">
+    <tr><th>指标</th><th>数值</th></tr>
+    <tr><td>样本起止</td><td style='text-align:right'>2019-01-04 ~ 2025-01-24</td></tr><tr><td>样本跨度（年）</td><td style='text-align:right'>6.056</td></tr><tr><td>LongOnly 近似年化</td><td style='text-align:right'>4.440%</td></tr><tr><td>LongShort 近似年化</td><td style='text-align:right'>3.268%</td></tr><tr><td>LongOnly 年化波动</td><td style='text-align:right'>4.793%</td></tr><tr><td>LongShort 年化波动</td><td style='text-align:right'>3.251%</td></tr><tr><td>LongOnly 最大回撤</td><td style='text-align:right'>-4.26%</td></tr><tr><td>LongShort 最大回撤</td><td style='text-align:right'>-0.94%</td></tr><tr><td>换仓次数（估计）</td><td style='text-align:right'>140</td></tr><tr><td>滑点（每次）</td><td style='text-align:right'>0.01%</td></tr><tr><td>择时（日频）：LongOnly 多头日胜率</td><td style='text-align:right'>58.34%</td></tr><tr><td>择时（日频）：LongShort 持国债日胜率</td><td style='text-align:right'>57.18%</td></tr><tr><td>择时（日频）：LongShort 持短融日胜率</td><td style='text-align:right'>86.50%</td></tr>
+  </table>
+
+  <h2>三、最终策略：LongOnly 与 LongShort</h2>
+  
+  <p class="muted">信号：收益率筛选（Dynamic）→ 离散仓位阈值 ±0.5；换仓次数≈140；滑点 0.01%。
+  择时胜率说明（日频、不含票息拆分）：持国债日统计国债日收益&gt;0 占比；持短融日统计短融日收益&gt;0 占比。</p>
+  <table class="stats">
+    <tr><th>策略</th><th>口径</th><th>近似年化</th><th>年化波动</th><th>最大回撤</th><th>多头胜率</th><th>空头胜率</th></tr>
+    <tr><td>LongOnly</td><td>买入并持有国债活跃券指数（931018）</td><td style="text-align:right">4.440%</td><td style="text-align:right">4.793%</td><td style="text-align:right">-4.26%</td><td style="text-align:right">58.34%</td><td style="text-align:right">—</td></tr>
+    <tr><td>LongShort</td><td>收益率筛选信号驱动：多国债/多短融二选一切换</td><td style="text-align:right">3.268%</td><td style="text-align:right">3.251%</td><td style="text-align:right">-0.94%</td><td style="text-align:right">57.18%</td><td style="text-align:right">86.50%</td></tr>
+  </table>
+
+  <div class="fig"><img src="fig_strategies_longonly_longshort.png" alt="LongOnly vs LongShort" /></div>
+
+  <h2>四、结果解读</h2>
+  <p><b>LongOnly</b> 代表一直持有国债活跃券指数，可视作防守基准；<b>LongShort</b> 则代表在国债与短融之间按动态信号切换，若动态信号转弱则更倾向退出或切换到短融。</p>
+  <p>若 LongShort 的 Sharpe、回撤控制和胜率均优于 LongOnly，说明该轮筛选与动态加权在样本内更有效；反之则说明当前因子池或状态环境更适合简单持有。</p>
+
+  <h2>五、风险提示</h2>
+  <p>本结果基于公开/整理数据与简化交易成本口径，仍不等同于可交易组合。仅供研究整理，不构成投资建议。</p>
+</div>
+</body>
+</html>
